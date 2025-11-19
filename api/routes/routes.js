@@ -17,8 +17,8 @@ router.get('/data/:id', async (req, res) => {
 
 router.get('/data', async (req, res) => {
     try {
-        const items = await Data.find();
-        res.json(items);
+        const item = await Data.findById("691cbf931dce8818755fbeb1");
+        res.json(item);
     } catch (err) {
         console.error("Fetch all error:", err);
         res.status(500).json({ message: "Error fetching data" });
