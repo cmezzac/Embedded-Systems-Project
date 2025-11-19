@@ -16,7 +16,6 @@ router.get('/data/:id', async (req, res) => {
     }
 });
 
-// GET ALL (you were missing this)
 router.get('/data', async (req, res) => {
     try {
         const items = await Data.find();
@@ -30,8 +29,12 @@ router.get('/data', async (req, res) => {
 // POST data
 router.post('/data', async (req, res) => {
     try {
-        const saved = await Data.create(req.body);
-        res.status(201).json({
+        const updated = await Data.findOneAndUpdate(
+            {},
+            req.body,
+            { new: true, upsert: true }
+        );
+        res.status(200).json({
             message: "Data saved successfully",
             data: saved
         });
