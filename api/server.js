@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const { dataCache } = require('./Cache/cache');
 const Data = require('./models/data');
 
-// Parse JSON
 app.use(express.json());
 
 mongoose.connect(
@@ -19,12 +18,10 @@ mongoose.connection.once('open', () => {
     console.log("📡 MongoDB Change Stream active...");
 
     const changeStream = Data.watch();
-
     changeStream.on('change', async (change) => {
         console.log("🔄 MongoDB Updated:", change);
 
         const updatedDoc = await Data.findById(change.documentKey._id);
-
         if (updatedDoc) {
             dataCache[updatedDoc._id] = updatedDoc;
             console.log("📥 Cache Updated:", dataCache[updatedDoc._id]);
@@ -32,10 +29,15 @@ mongoose.connection.once('open', () => {
     });
 });
 
+// USE ROUTES
 const myRoutes = require('./routes/routes');
 app.use('/api', myRoutes);
 
+app.get("/", (req, res) => {
+    res.send("API is running!");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log("Server running on port", PORT);
 });

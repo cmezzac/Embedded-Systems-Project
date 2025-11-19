@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Data = require("../models/data");
 
+// GET by ID
 router.get('/data/:id', async (req, res) => {
     try {
         const item = await Data.findById(req.params.id);
@@ -15,7 +16,18 @@ router.get('/data/:id', async (req, res) => {
     }
 });
 
+// GET ALL (you were missing this)
+router.get('/data', async (req, res) => {
+    try {
+        const items = await Data.find();
+        res.json(items);
+    } catch (err) {
+        console.error("Fetch all error:", err);
+        res.status(500).json({ message: "Error fetching data" });
+    }
+});
 
+// POST data
 router.post('/data', async (req, res) => {
     try {
         const saved = await Data.create(req.body);
@@ -29,6 +41,7 @@ router.post('/data', async (req, res) => {
     }
 });
 
+// POST device
 router.post('/device', async (req, res) => {
     try {
         const device = new Data(req.body);
