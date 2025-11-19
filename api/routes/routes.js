@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Data = require("../models/data");
 
-// GET by ID
 router.get('/data/:id', async (req, res) => {
     try {
         const item = await Data.findById(req.params.id);
@@ -26,8 +25,7 @@ router.get('/data', async (req, res) => {
     }
 });
 
-// POST data
-router.post('/data', async (req, res) => {
+router.post('/updateData', async (req, res) => {
     try {
         const updated = await Data.findOneAndUpdate(
             {},
@@ -36,22 +34,11 @@ router.post('/data', async (req, res) => {
         );
         res.status(200).json({
             message: "Data saved successfully",
-            data: saved
+            data: updated
         });
     } catch (err) {
         console.error("Error saving data:", err);
         res.status(500).json({ message: "Failed to save data", error: err.message });
-    }
-});
-
-// POST device
-router.post('/device', async (req, res) => {
-    try {
-        const device = new Data(req.body);
-        await device.save();
-        res.json(device);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
     }
 });
 
