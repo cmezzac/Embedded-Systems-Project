@@ -3,4 +3,4 @@ builder = "NIXPACKS"
 buildCommand = "cd server && npm install"
 
 [start]
-startCommand = "cd server && npm start"
+startCommand = "npm start"
