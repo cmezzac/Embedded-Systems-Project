@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Data = require("../models/data");
+const { dataCache } = require("../Cache/cache");
 
 router.get('/data/:id', async (req, res) => {
     try {
@@ -25,8 +26,7 @@ router.get('/data', async (req, res) => {
     }
 });
 
-const { dataCache } = require("../Cache/cache");
-const Data = require("../models/data");
+
 
 router.post("/updateData", async (req, res) => {
     try {
