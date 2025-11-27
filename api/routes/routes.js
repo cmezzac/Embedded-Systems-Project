@@ -25,21 +25,67 @@ router.get('/data', async (req, res) => {
     }
 });
 
-router.post('/updateData', async (req, res) => {
+const { dataCache } = require("../Cache/cache");
+const Data = require("../models/data");
+
+router.post("/updateData", async (req, res) => {
     try {
+        const incoming = req.body;
+
+        // Initialize cache if empty
+        if (!dataCache.current) {
+            console.log("🆕 Cache empty → initializing...");
+            dataCache.current = incoming;
+        }
+
+        const cached = dataCache.current;
+
+        let shouldUpdate = false;
+
+        if (Math.abs(incoming.pHLevel - cached.pHLevel) >= 0.5) {
+            console.log("🔄 pH changed enough → updating");
+            shouldUpdate = true;
+        }
+
+        if (incoming.waterClarity !== cached.waterClarity) {
+            console.log("🔄 Water clarity changed → updating");
+            shouldUpdate = true;
+        }
+
+        if (incoming.isLeakDetected !== cached.isLeakDetected) {
+            console.log("🔄 Leak detection changed → updating");
+            shouldUpdate = true;
+        }
+
+        if (!shouldUpdate) {
+            console.log("⏳ Minor change detected → skipping DB update");
+            return res.status(200).json({
+                message: "No significant changes — not updating DB",
+                cached: cached
+            });
+        }
+
         const updated = await Data.findOneAndUpdate(
             {},
-            req.body,
+            incoming,
             { new: true, upsert: true }
         );
+
+
+        dataCache.current = updated;
+
+        console.log("💾 DB UPDATED & cache refreshed");
+
         res.status(200).json({
             message: "Data saved successfully",
             data: updated
         });
+
     } catch (err) {
         console.error("Error saving data:", err);
         res.status(500).json({ message: "Failed to save data", error: err.message });
     }
 });
+
 
 module.exports = router;
