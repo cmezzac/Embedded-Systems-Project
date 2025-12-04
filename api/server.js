@@ -33,6 +33,10 @@ mongoose.connection.once('open', () => {
 const myRoutes = require('./routes/routes');
 app.use('/api', myRoutes);
 
+// Distance Route
+const distanceRoutes = require('./routes/distanceRoutes');
+app.use('/api', distanceRoutes);
+
 app.get("/", (req, res) => {
     res.send("API is running!");
 });
