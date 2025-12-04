@@ -34,8 +34,8 @@ const myRoutes = require('./routes/routes');
 app.use('/api', myRoutes);
 
 // Distance Route
-const distanceRoutes = require('./routes/distanceRoutes');
-app.use('/api', distanceRoutes);
+const distanceRoutes = require('./routes/distance_routes');
+app.use('/api/distance', distanceRoutes);
 
 app.get("/", (req, res) => {
     res.send("API is running!");
