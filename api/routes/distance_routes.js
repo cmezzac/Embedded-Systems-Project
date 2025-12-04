@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { Distance } = require("../models/distance");
+
+const Distance = require("../models/distance");
 
 // POST /api/distance
 router.post("/", async (req, res) => {
@@ -32,7 +33,6 @@ router.get("/latest", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // GET /api/distance
 router.get("/", async (req, res) => {
