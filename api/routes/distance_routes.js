@@ -6,9 +6,13 @@ const Distance = require("../models/distance");
 // POST /api/distance
 router.post("/", async (req, res) => {
   try {
-    const { distance, message } = req.body;
+    const { sensorId, distance, message } = req.body;
 
-    const entry = new Distance({ distance, message });
+    if (!sensorId) {
+      return res.status(400).json({ error: "sensorId is required" });
+    }
+
+    const entry = new Distance({ sensorId, distance, message });
     await entry.save();
 
     res.status(201).json(entry);
@@ -18,13 +22,16 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET /api/distance/latest
-router.get("/latest", async (req, res) => {
+// GET /api/distance/latest/:sensorId
+router.get("/latest/:sensorId", async (req, res) => {
   try {
-    const latest = await Distance.findOne().sort({ _id: -1 });
+    const { sensorId } = req.params;
+
+    const latest = await Distance.findOne({ sensorId })
+      .sort({ _id: -1 });
 
     if (!latest) {
-      return res.status(404).json({ message: "No distance data found." });
+      return res.status(404).json({ message: "No data found for that sensor." });
     }
 
     res.json(latest);
@@ -34,10 +41,12 @@ router.get("/latest", async (req, res) => {
   }
 });
 
-// GET /api/distance
-router.get("/", async (req, res) => {
+// GET /api/distance/:sensorId
+router.get("/:sensorId", async (req, res) => {
   try {
-    const all = await Distance.find().sort({ _id: -1 });
+    const { sensorId } = req.params;
+
+    const all = await Distance.find({ sensorId }).sort({ _id: -1 });
     res.json(all);
   } catch (err) {
     console.error("Distance GET error:", err);
