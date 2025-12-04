@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Distance } = require("../models/data");
+const { Distance } = require("../models/distance");
 
 // POST /api/distance
 router.post("/", async (req, res) => {
