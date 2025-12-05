@@ -1,9 +1,16 @@
 const express = require('express');
+const cors = require('cors');          // ⭐ ADD THIS
 const app = express();
 const mongoose = require('mongoose');
 
 const { dataCache } = require('./Cache/cache');
 const Data = require('./models/data');
+
+// ⭐ ENABLE CORS (must be at the top before routes)
+app.use(cors({
+    origin: "*",                       // or replace "*" with your frontend URL later
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 
 app.use(express.json());
 
