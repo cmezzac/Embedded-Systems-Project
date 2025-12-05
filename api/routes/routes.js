@@ -87,5 +87,50 @@ router.post("/updateData", async (req, res) => {
     }
 });
 
+router.post('/waitTime', async (req, res) => {
+    try {
+        const WaitTime = require("../models/wait");
+        const { waitTime, numberOfPeople } = req.body;
+
+        const updatedWaitTime = await WaitTime.findOneAndUpdate(
+            {},
+            { waitTime, numberOfPeople },
+            { new: true, upsert: true }
+        );
+
+        res.status(200).json(updatedWaitTime);
+    } catch (err) {
+        console.error("Error updating wait time:", err);
+        res.status(500).json({
+            message: "Failed to update wait time",
+            error: err.message
+        });
+    }
+});
+
+router.get('/waitTime', async (req, res) => {
+    try {
+        const WaitTime = require("../models/wait");
+
+        const waitData = await WaitTime.findOne({});
+
+        if (!waitData) {
+            return res.status(404).json({ message: "No wait time data found" });
+        }
+
+        res.status(200).json(waitData);
+    } catch (err) {
+        console.error("Error fetching wait time:", err);
+        res.status(500).json({
+            message: "Failed to get wait time",
+            error: err.message
+        });
+    }
+});
+
+
+
+
+
 
 module.exports = router;
