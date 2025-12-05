@@ -108,7 +108,7 @@ router.post('/waitTime', async (req, res) => {
     }
 });
 
-router.get('/waitTime', async (req, res) => {
+router.get('/getWaitTime', async (req, res) => {
     try {
         const WaitTime = require("../models/wait");
 
